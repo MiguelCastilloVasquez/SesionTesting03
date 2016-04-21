@@ -100,8 +100,20 @@ public class TestProducto {
 		assertThat(prox,equalTo(ex2));
 	}
 	
-	
-	
+	@Test(expected=ExcepcionDeProducto.class)
+	public void TestGetProximaExistenciaExepcion()throws ExcepcionDeProducto{
+		Existencia ex1 = new Existencia("23");
+		Existencia ex2 = new Existencia("54");
+		Producto producto = new Producto("flauta",1,6);
+		producto.addExistencia(ex1);
+		producto.addExistencia(ex2);
+		
+		producto.getProximaExistencia();
+		producto.getProximaExistencia();
+		producto.getProximaExistencia();
+		
+	}
+
 	@Test
 	public void TestAddExistenciaTrue(){
 		Existencia ex1 = new Existencia("23");
@@ -113,4 +125,49 @@ public class TestProducto {
 		
 	}
 	
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void TestAddExistenciaFalse(){
+		Existencia ex1 = new Existencia("23");
+		Producto producto = new Producto("flauta",0,0);
+		boolean resultado=producto.addExistencia(ex1);
+	
+		assertThat(resultado,equalTo(true));
+	}
+	
+	
+	@Test
+	public void TestGetCodigoProximaExistenciaSinCategoria()throws ExcepcionDeProducto{
+		Existencia ex1 = new Existencia("23");
+		Existencia ex2 = new Existencia("257");
+		Producto producto = new Producto("flauta",1,6);
+		producto.addExistencia(ex1);
+		producto.addExistencia(ex2);
+		
+		String codigoProxima = producto.getCodigoProximaExistencia();
+		
+		assertThat(codigoProxima,equalTo("XXXXX-257"));
+	}
+	
+	@Test
+	public void TestGetCodigoProximaExistenciaConCategoria()throws ExcepcionDeProducto{
+		Existencia ex1 = new Existencia("23");
+		Existencia ex2 = new Existencia("257");
+		Categoria categoria = new Categoria("instrumentos","ins1");
+		Producto producto = new Producto("flauta",1,6,categoria);
+		producto.addExistencia(ex1);
+		producto.addExistencia(ex2);
+		
+		String codigoProxima = producto.getCodigoProximaExistencia();
+		
+		assertThat(codigoProxima,equalTo("ins1-257"));
+	}
+	
+	
+	@Test(expected=ExcepcionDeProducto.class)
+	public void TestGetCodigoProximaExistenciaExcepcio()throws ExcepcionDeProducto{
+		Producto producto = new Producto("flauta",1,6);
+		
+		producto.getCodigoProximaExistencia();
+	}
 }
